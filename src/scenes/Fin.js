@@ -18,10 +18,12 @@ export default class Fin extends Phaser.Scene {
 
   create() {
     this.cantidadEstrellasTexto = this.add.text(
-      15,
-      15,
-      "Estrellas recolectadas: " + this.cantidadEstrellas,
+      300,
+      400,
+      "FIN! Estrellas recolectadas: " + this.cantidadEstrellas,
       { fontSize: "15px", fill: "#FFFFFF" }
     );
+    
+      
   }
 }
