@@ -17,13 +17,24 @@ export default class Fin extends Phaser.Scene {
   }
 
   create() {
+    this.music = this.sound.add("victory");
+    this.music.play({ loop: true, volume: 0.5 });
     this.cantidadEstrellasTexto = this.add.text(
+      240,
       300,
-      400,
-      "FIN! Estrellas recolectadas: " + this.cantidadEstrellas,
-      { fontSize: "15px", fill: "#FFFFFF" }
+        "FIN! Estrellas recolectadas: " + this.cantidadEstrellas,
+      { fontSize: "20px", fill: "#FFFFFF" }
     );
     
-      
+    this.restartButton=this.add.image(400,400,"restartB");
+    this.restartButton.setScale(0.05)
+                      .setInteractive()
+                      .on('pointerdown', () => {
+                        this.music.stop();
+                        this.scene.start("escena1");
+                      });
+ 
+   }
+ 
   }
-}
+

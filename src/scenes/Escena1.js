@@ -8,18 +8,17 @@ export default class Escena1 extends Phaser.Scene {
   }
 
   init() {
-    // this is called before the scene is created
-    // init variables
-    // take data passed from other scenes
-    // data object param {}
+  
 
     this.cantidadEstrellas = 0;
     console.log("Prueba !");
   }
 
   create() {
-    // todo / para hacer: texto de puntaje
+    // texto de puntaje
     const map = this.make.tilemap({ key: "map" });
+    this.music = this.sound.add("music1");
+    this.music.play({ loop: true, volume: 0.5 });
 
     // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
     // Phaser's cache (i.e. the name you used in preload)
@@ -44,6 +43,7 @@ export default class Escena1 extends Phaser.Scene {
     // Find in the Object Layer, the name "dude" and get position
     let spawnPoint = map.findObject("objetos", (obj) => obj.name === "jugador");
     console.log(spawnPoint);
+
     // The player and its settings
     this.jugador = this.physics.add.sprite(spawnPoint.x, spawnPoint.y, "dude");
 
@@ -62,6 +62,7 @@ export default class Escena1 extends Phaser.Scene {
 
     // Create empty group of starts
     this.estrellas = this.physics.add.group();
+    
 
     // find object layer
     // if type is "stars", add to stars group
@@ -77,9 +78,54 @@ export default class Escena1 extends Phaser.Scene {
           break;
         }
       }
+    })
+
+    this.enemy=this.physics.add.group();
+    objectosLayer.objects.forEach((objData) => {
+      const { x = 0, y = 0, name } = objData;
+      switch (name) {
+        case "enemigo": {
+          const enemigo = this.enemy.create(x, y, "enemy");
+          enemigo.anims.play('enemyanimation'); 
+          enemigo.setVelocityX(30); 
+          enemigo.setCollideWorldBounds(true);
+  
+          if(enemigo.setBounce > 0) {
+            enemigo.setFlipX(false);
+          } else if (enemigo.setBounce < 0) {
+            enemigo.setFlipX(true); 
+         
+          
+      
+          break;
+        }
+      }
+    }});
+  
+    this.enemy2=this.physics.add.group();
+    objectosLayer.objects.forEach((objData) => {
+      const { x = 0, y = 0, name } = objData;
+      switch (name) {
+        case "enemigo2": {
+          const enemigo2 = this.enemy2.create(x, y, "enemy2");
+          enemigo2.anims.play('enemy2animation'); 
+          enemigo2.setVelocityY(30); 
+          enemigo2.setCollideWorldBounds(true);
+        
+          break;
+        }
+      }
+    });
+
+
+
+    this.enemy2.getChildren().forEach((enemigo2) => {
+      enemigo2.setVelocity(0, -150);
+      enemigo2.setCollideWorldBounds(true);
     });
 
     this.physics.add.collider(this.jugador, plataformaLayer);
+    this.physics.add.collider(this.enemy2,plataformaLayer);
     this.physics.add.collider(this.estrellas, plataformaLayer);
     this.physics.add.collider(
       this.jugador,
@@ -96,6 +142,7 @@ export default class Escena1 extends Phaser.Scene {
       () => this.cantidadEstrellas >= 5, // condicion de ejecucion
       this
     );
+    this.physics.add.collider(this.enemy, plataformaLayer);
 
     /// mostrar cantidadEstrella en pantalla
     this.cantidadEstrellasTexto = this.add.text(
@@ -142,6 +189,7 @@ export default class Escena1 extends Phaser.Scene {
       "Estrellas recolectadas: " + this.cantidadEstrellas
     );
   }
+  
 
   esVencedor(jugador, salida) {
     // if (this.cantidadEstrellas >= 5)
@@ -150,5 +198,7 @@ export default class Escena1 extends Phaser.Scene {
     console.log("estrellas recolectadas", this.cantidadEstrellas);
 
     this.scene.start("escena2",{cantidadEstrellas: this.cantidadEstrellas});
+    this.music.stop();
   }
 }
+

@@ -11,8 +11,9 @@ export default class Escena2 extends Phaser.Scene {
 create() {
   // todo / para hacer: texto de puntaje
   console.log("antes el map");
-
-  const map = this.make.tilemap ({ key: "map4" });
+  this.music = this.sound.add("music2");
+  this.music.play({ loop: true, volume: 0.5 });
+  const map = this.make.tilemap ({ key: "map2" });
 
   console.log("paso el map");
 
@@ -149,6 +150,7 @@ esVencedor(jugador, salida) {
 
   console.log("estrellas recolectadas", this.cantidadEstrellas);
 
-  this.scene.start("fin", {cantidadEstrellas:this.cantidadEstrellas});
+  this.scene.start("escena3", {cantidadEstrellas:this.cantidadEstrellas});
+  this.music.stop();
 }
 }
